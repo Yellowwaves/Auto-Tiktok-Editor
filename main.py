@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
-from moviepy.editor import *
-from moviepy.video.fx.all import crop
+from moviepy import *
 from PIL import Image, ImageDraw, ImageFont
 import os
 from random import choice
@@ -11,7 +10,7 @@ from tkinter.messagebox import showerror
 from tkinter import filedialog as fd
 
 
-def create_tiktok_text(size: tuple, message: str, fontColor, fnt = ImageFont.truetype('ressources\Futura.otf', 70)):
+def create_tiktok_text(size: tuple, message: str, fontColor, fnt = ImageFont.truetype('ressources/Futura.otf', 70)):
     espacement = 13
     W, H = size
     image = Image.new('RGBA', size, (0,0,0,0))
@@ -27,11 +26,11 @@ def one_tiktok(text: str, frontclip: VideoClip, backclip: VideoClip):
     myImage.save(filename)
 
     (w, h) = backclip.size
-    backclip = crop(backclip, width=720, height=650, x_center=w/2, y_center=h/2).resize(width=1280)
+    backclip = backclip.crop(width=720, height=650, x_center=w/2, y_center=h/2).resize(width=1280)
 
-    final_clip = clips_array([[frontclip],[backclip]])
+    final_clip = clips_array([[frontclip], [backclip]])
     (w2, h2) = frontclip.size
-    title = ImageClip(filename).set_start(0).set_duration(frontclip.duration).set_pos(("center",h2/2)) #h2+10
+    title = ImageClip(filename).set_start(0).set_duration(frontclip.duration).set_pos(("center", h2 / 2))
 
     final = CompositeVideoClip([final_clip, title])
     final.write_videofile(sanitize_filename(f"{text}.mp4"))
